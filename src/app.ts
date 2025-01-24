@@ -29,7 +29,7 @@ export const stripe = new Stripe(stripekey);
 app.use(express.json());
 app.use(morgan("dev"));
 app.use(cors({
-  origin: [process.env.CLIENT_URL!],
+  origin: [process.env.CLIENT_URL || "https://zylaro.netlify.app"],
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true,
 }));
