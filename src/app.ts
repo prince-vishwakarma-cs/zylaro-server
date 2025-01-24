@@ -26,12 +26,13 @@ connectDB(mongourl);
 export const redis = connectRedis(redisURI);
 
 export const stripe = new Stripe(stripekey);
+
 app.use(express.json());
 app.use(morgan("dev"));
 app.use(cors({
-  origin: "*",  // Allow all origins
+  origin: "*",  // Allow all origins for development
   methods: ["GET", "POST", "PUT", "DELETE"],
-  credentials: true, // Allow cookies to be sent with cross-origin requests
+  credentials: true,
 }));
 
 
