@@ -12,12 +12,6 @@
         "dest": "/dist/app.js"
       }
     ],
-    "outputDirectory": "dist",
-    "functions": {
-      "api/**.js": {
-        "memory": 1024,
-        "maxDuration": 10
-      }
-    }
+    "outputDirectory": "dist"
   }
   
