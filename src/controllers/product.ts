@@ -83,22 +83,31 @@ export const updateProduct = TryCatch(async (req, res, next) => {
   if (!product) return next(new ErrorHandler("Product not found", 400));
 
   if (photos && photos.length > 0) {
+    // Upload new photos to Cloudinary
     const photourl = await uploadToCloudinary(photos);
 
+    // Delete old photos from Cloudinary
     const IDs = product.photos.map((photo) => photo.public_id);
-
     await deleteFromCloudinary(IDs);
 
-    product.photos = photourl;
+    // Assign the new photos to the product
+    product.photos = photourl.map((photo) => ({
+      public_id: photo.public_id,
+      url: photo.url,
+    })) as any; // Use `as any` to bypass strict typing for assignment
   }
 
+  // Update other fields if provided
   if (name) product.name = name;
   if (price) product.price = price;
   if (stock) product.stock = stock;
   if (category) product.category = category;
   if (description) product.description = description;
+
+  // Save the updated product
   await product.save();
 
+  // Invalidate cache for updated product
   await invalidateCache({
     product: true,
     productId: String(product._id),
@@ -107,9 +116,10 @@ export const updateProduct = TryCatch(async (req, res, next) => {
 
   return res.status(201).json({
     success: true,
-    message: "Product updates successfully",
+    message: "Product updated successfully",
   });
 });
+
 
 export const productInfo = TryCatch(async (req, res, next) => {
   let product;
